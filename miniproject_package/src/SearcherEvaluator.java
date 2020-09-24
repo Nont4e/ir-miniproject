@@ -72,18 +72,22 @@ public class SearcherEvaluator {
         /*********************** YOUR CODE HERE *************************/
         int qid = query.getId();
         Set<Integer> relevantdoc = this.answers.get(qid);
-        Set<Integer> realrelevantdoc = this.answers.get(qid);
+        int relevant = relevantdoc.size();
 
         List<SearchResult> searchResults = searcher.search(query.getRawText(), k);
-        Set<Integer> searchResultId = new HashSet<Integer>(); 
+        Set<Integer> searchResultId = new HashSet<Integer>();
         for (SearchResult result : searchResults) {
             searchResultId.add(result.getDocument().getId());
         }
+        int intersect = 0;
+        for(Integer docID: relevantdoc){
+            if(searchResultId.contains(docID)){
+                intersect++;
+            }
+        }
 
-        relevantdoc.retainAll(searchResultId);
-
-        double precision = relevantdoc.size() / (double) searchResults.size();
-        double recall = relevantdoc.size() / (double) realrelevantdoc.size();
+        double precision = intersect / (double) searchResults.size();
+        double recall = intersect / (double) relevant;
 
         double f = 0;
         if (precision + recall != 0) {
@@ -113,11 +117,11 @@ public class SearcherEvaluator {
             totalrecall += a[1];
             totalf += a[2];
         }
-        double avgprecision = totalprecision / (double) queries.size();
-        double avgrecall = totalrecall / (double) queries.size();
-        double avgf = totalf / (double) queries.size();
+        double avgPre = totalprecision / (double) queries.size();
+        double avgRe = totalrecall / (double) queries.size();
+        double avgF1 = totalf / (double) queries.size();
 
-        return new double[]{avgprecision, avgrecall, avgf};
+        return new double[]{avgPre, avgRe, avgF1};
         /****************************************************************/
     }
 }
