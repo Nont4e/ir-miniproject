@@ -85,11 +85,10 @@ public class SearcherEvaluator {
                 intersect++;
             }
         }
-
         double precision = intersect / (double) searchResults.size();
         double recall = intersect / (double) relevant;
-
         double f = 0;
+        //Divisor is not 0
         if (precision + recall != 0) {
             f = (2 * precision * recall) / (precision + recall);
         }
@@ -106,11 +105,10 @@ public class SearcherEvaluator {
      * @return
      */
     public double[] getAveragePRF(Searcher searcher, int k) {
+        /*********************** YOUR CODE HERE *************************/
         double totalprecision = 0;
         double totalrecall = 0;
         double totalf = 0;
-
-        /*********************** YOUR CODE HERE *************************/
         for (Document query : queries) {
             double[] a = getQueryPRF(query, searcher, k);
             totalprecision += a[0];
